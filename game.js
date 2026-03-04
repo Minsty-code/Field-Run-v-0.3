@@ -22,11 +22,8 @@
         document.documentElement.style.setProperty("--loader-visible", "0");
     }
 
-    function startTracking() {
-
-        if (!isRunning) {
-            
-            if ("geolocation" in navigator) {                              
+    function startGPS() {
+        if ("geolocation" in navigator) {                              
 //watchPosition = surveille la position en continu
             watchId = navigator.geolocation.watchPosition( //-----------------------------WATCH POSITION
                 onPositionUpdate,
@@ -38,50 +35,53 @@
                     timeout: 75000
                 }
             );
-                
-                isRunning = true;
-                
-            } else {
+            
+        } else {
                 
                 alert("GPS non disponible sur ce navigateur");
             }
-        }
-
     }
+    function startTracking() {
+            alert ("Tracking ON");
 
+        isRunning = true;
+        coords = [];
+        line.setLatLngs([]);
+    }
+        
     function stopTracking() {
-        if (isRunning) {
-            navigator.geolocation.clearWatch(watchId)
-        }
-
         isRunning = false;
-
     }
 
     function onPositionUpdate(position) {
 
+        showLoader();
 //Récupère les coordonnées
         const lat = position.coords.latitude;
         const lon = position.coords.longitude;
 //Récupère la précision en mètres
         const accuracy = position.coords.accuracy;
 
-        coords.push([lat, lon]);
-        
         updateMarker(lat, lon);
         
         updateAccuracyCircle(lat, lon, accuracy);
         
-        updateLine(coords);
-
-        if (firstFix) {
-            map.setView([lat, lon], 16); // centre + zoom fort
-            firstFix = false;
-            hideLoader();
-        } else {
-            map.panTo([lat, lon]);       // déplacement doux
+        if (isRunning) {
+            coords.push([lat, lon]);
+            updateLine(coords);
         }
 
+        hideLoader();
+        if(map) {
+            if (firstFix) {
+                map.setView([lat, lon], 16); // centre + zoom fort
+                firstFix = false;
+                hideLoader();
+            } else {
+                map.panTo([lat, lon]);       // déplacement doux
+            }
+
+        }
     }
 
     function handleError(error) {

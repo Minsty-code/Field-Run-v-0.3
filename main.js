@@ -1,7 +1,7 @@
 //====================
 //Lancement
 //====================
-        
+
     document.addEventListener("DOMContentLoaded", () => {
         
         showLoader();
@@ -10,14 +10,12 @@
         initMarker();
         initTrackingLine();
 
-        startTracking();
-
-        hideLoader();
+        startGPS();
         
         const Btnstart = document.getElementById('Btnstart');
         const Btnstop = document.getElementById('Btnstop');
     
-        Btnstart.addEventListenr("click", startTracking)
+        Btnstart.addEventListener("click", startTracking)
         Btnstop.addEventListener("click", stopTracking)
     
     });

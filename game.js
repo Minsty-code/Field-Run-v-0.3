@@ -42,8 +42,6 @@
             }
     }
     function startTracking() {
-            alert ("Tracking ON");
-
         isRunning = true;
         coords = [];
         line.setLatLngs([]);
